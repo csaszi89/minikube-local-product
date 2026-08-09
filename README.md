@@ -2,26 +2,28 @@
 
 Minimal .NET 10 + MongoDB + React CRUD app Kubernetes learning project.
 
-## Projekt struktúra
+## Project structure
 
 ```
 .
 ├── backend/        # .NET 10 Minimal API
 ├── frontend/       # React + Vite + TypeScript
-└── k8s/            # Kubernetes manifests
-    ├── mongo.yaml  # MongoDB StatefulSet
-    ├── backend.yaml
-    └── frontend.yaml
+├── k8s/            # Kubernetes manifests
+│   ├── mongo.yaml  # MongoDB StatefulSet
+│   ├── backend.yaml
+│   └── frontend.yaml
+├── docker-compose.yml
+└── deploy.ps1      # Minikube deploy script
 ```
 
-## Lokális fejlesztés (Docker nélkül)
+## Local development (without Docker)
 
-### 1. MongoDB indítása lokálisan
+### 1. Start MongoDB locally
 ```bash
 docker run -d -p 27017:27017 --name mongo mongo:7
 ```
 
-### 2. Backend futtatása
+### 2. Run the backend
 ```bash
 cd backend
 dotnet run
@@ -29,7 +31,7 @@ dotnet run
 # Docs: http://localhost:8080/openapi/v1.json
 ```
 
-### 3. Frontend futtatása
+### 3. Run the frontend
 ```bash
 cd frontend
 npm install
@@ -39,46 +41,53 @@ npm run dev
 
 ---
 
-## Minikube deployment
+## Docker Compose (local development)
 
-### 1. Minikube Docker registry beállítása
-```bash
-# Powershell: minikube docker-env kimenetét futtatni
-& minikube -p minikube docker-env --shell powershell | Invoke-Expression
+```powershell
+docker compose up --build
+# UI: http://localhost:3000
 ```
 
-### 2. Docker image-ek buildelése
-```bash
-docker build -t task-api:latest ./backend
-docker build -t task-frontend:latest ./frontend
+---
+
+## Minikube deployment (Windows)
+
+### Prerequisites
+- [Minikube](https://minikube.sigs.k8s.io/) installed and started: `minikube start`
+
+### Deploy
+
+```powershell
+.\deploy.ps1
 ```
 
-### 3. Deploy Kubernetes-re
-```bash
-kubectl apply -f k8s/mongo.yaml
-kubectl apply -f k8s/backend.yaml
-kubectl apply -f k8s/frontend.yaml
+The script:
+1. Checks that Minikube is running
+2. Builds images into Minikube's internal daemon (`minikube image build`)
+3. Applies the K8s manifests
+4. Waits for all rollouts to complete
+
+### Open the app
+
+```powershell
+minikube service frontend-svc
 ```
 
-### 4. Ellenőrzés
-```bash
-kubectl get pods
-kubectl get services
+> **Note (Windows + Docker driver):** the IP returned by `minikube ip` is not directly reachable from Windows, so `minikube service` tunnel is required.
+
+### Manifest-only update (no image rebuild)
+
+```powershell
+.\deploy.ps1 -SkipBuild
 ```
 
-### 5. App elérése
-```bash
-minikube ip
-# Böngészőben: http://<minikube-ip>:30080
-```
+## API endpoints
 
-## API végpontok
-
-| Method | Endpoint           | Leírás              |
-|--------|--------------------|---------------------|
-| GET    | /api/tasks         | Összes task listázás |
-| GET    | /api/tasks/{id}    | Egy task lekérése   |
-| POST   | /api/tasks         | Új task létrehozás  |
-| PUT    | /api/tasks/{id}    | Task frissítés      |
-| DELETE | /api/tasks/{id}    | Task törlés         |
-| GET    | /health            | Health check        |
+| Method | Endpoint        | Description       |
+|--------|-----------------|-------------------|
+| GET    | /api/tasks      | List all tasks    |
+| GET    | /api/tasks/{id} | Get a task        |
+| POST   | /api/tasks      | Create a task     |
+| PUT    | /api/tasks/{id} | Update a task     |
+| DELETE | /api/tasks/{id} | Delete a task     |
+| GET    | /health         | Health check      |
