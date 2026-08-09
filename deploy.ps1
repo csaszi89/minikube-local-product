@@ -21,17 +21,13 @@ if ($status -ne 'Running') {
     minikube start
 }
 
-# ── 2. Docker env beállítása a Minikube daemon-ra ────────────────────────────
-Write-Host "🐳 Docker env -> Minikube" -ForegroundColor Cyan
-& minikube -p minikube docker-env --shell powershell | Invoke-Expression
-
-# ── 3. Image build ────────────────────────────────────────────────────────────
+# ── 2. Image build (minikube image build -> garantáltan a cluster daemon-ba) ──
 if (-not $SkipBuild) {
     Write-Host "🔨 Building task-api:latest..." -ForegroundColor Cyan
-    docker build -t task-api:latest ./backend
+    minikube image build -t task-api:latest ./backend
 
     Write-Host "🔨 Building task-frontend:latest..." -ForegroundColor Cyan
-    docker build -t task-frontend:latest ./frontend
+    minikube image build -t task-frontend:latest ./frontend
 }
 
 # ── 4. Manifests alkalmazása ──────────────────────────────────────────────────
@@ -40,6 +36,11 @@ kubectl apply -f k8s/mongo.yaml
 kubectl apply -f k8s/backend.yaml
 kubectl apply -f k8s/frontend.yaml
 
+if (-not $SkipBuild) {
+    # same :latest tag -> apply alone won't trigger new rollout, force it
+    kubectl rollout restart deployment/backend deployment/frontend
+}
+
 # ── 5. Rollout bevárása ───────────────────────────────────────────────────────
 Write-Host "⏳ Waiting for rollouts..." -ForegroundColor Cyan
 kubectl rollout status statefulset/mongo   --timeout=120s
@@ -47,7 +48,6 @@ kubectl rollout status deployment/backend  --timeout=120s
 kubectl rollout status deployment/frontend --timeout=120s
 
 # ── 6. URL megjelenítése ──────────────────────────────────────────────────────
-$ip = minikube ip
 Write-Host ""
 Write-Host "✅ Deploy kész!" -ForegroundColor Green
-Write-Host "   Frontend: http://${ip}:30080" -ForegroundColor Green
+Write-Host "   Nyisd meg: minikube service frontend-svc" -ForegroundColor Green
