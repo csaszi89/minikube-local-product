@@ -1,0 +1,44 @@
+# ─── .NET / C# ───────────────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.vs/
+.vs/
+project.lock.json
+*.nupkg
+*.snupkg
+*.log
+
+# ─── ASP.NET ─────────────────────────────────────────────────────────────────
+appsettings.*.local.json
+appsettings.local.json
+
+# ─── Node / Frontend ─────────────────────────────────────────────────────────
+node_modules/
+dist/
+.cache/
+.vite/
+*.tsbuildinfo
+
+# ─── Environment & secrets ───────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+
+# ─── OS ──────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ─── VS Code ─────────────────────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/settings.json
+
+# ─── Docker ──────────────────────────────────────────────────────────────────
+*.override.yml
+docker-compose.override.yml
