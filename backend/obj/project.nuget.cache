@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9eCdeEAO1t0=",
+  "dgSpecHash": "diQHa7IaOLw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\TaskApi.csproj",
+  "projectFilePath": "C:\\repos\\minikube-local-product\\backend\\TaskApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\gyoergy.csaszar\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\gyoergy.csaszar\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.10\\microsoft.aspnetcore.openapi.10.0.10.nupkg.sha512",
@@ -18,9 +18,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'Microsoft.OpenApi' 2.0.0 has a known high severity vulnerability, https://github.com/advisories/GHSA-v5pm-xwqc-g5wc",
-      "projectPath": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\TaskApi.csproj",
+      "projectPath": "C:\\repos\\minikube-local-product\\backend\\TaskApi.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\TaskApi.csproj",
+      "filePath": "C:\\repos\\minikube-local-product\\backend\\TaskApi.csproj",
       "libraryId": "Microsoft.OpenApi",
       "targetGraphs": [
         "net10.0"

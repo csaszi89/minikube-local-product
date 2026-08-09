@@ -287,11 +287,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\TaskApi.csproj",
+      "projectUniqueName": "C:\\repos\\minikube-local-product\\backend\\TaskApi.csproj",
       "projectName": "TaskApi",
-      "projectPath": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\TaskApi.csproj",
+      "projectPath": "C:\\repos\\minikube-local-product\\backend\\TaskApi.csproj",
       "packagesPath": "C:\\Users\\gyoergy.csaszar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\gyoergy.csaszar\\OneDrive - ELPRO-BUCHS AG\\Desktop\\minikube-local-product\\backend\\obj\\",
+      "outputPath": "C:\\repos\\minikube-local-product\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
