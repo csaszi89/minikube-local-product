@@ -1,6 +1,8 @@
 # ─── .NET / C# ───────────────────────────────────────────────────────────────
 bin/
 obj/
+backend/bin/
+backend/obj/
 *.user
 *.suo
 *.userosscache
