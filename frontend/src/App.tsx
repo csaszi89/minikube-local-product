@@ -2,6 +2,7 @@
 import './App.css';
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+const TITLE_MAX_LENGTH = 100;
 
 interface Task {
   id?: string;
@@ -18,6 +19,8 @@ function App() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState('');
   const [editDesc, setEditDesc] = useState('');
+  const [titleError, setTitleError] = useState('');
+  const [editTitleError, setEditTitleError] = useState('');
 
   const fetchTasks = async () => {
     const res = await fetch(`${API}/api/tasks`);
@@ -28,7 +31,7 @@ function App() {
 
   const createTask = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!title.trim() || title.length > TITLE_MAX_LENGTH) return;
     await fetch(`${API}/api/tasks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -36,7 +39,18 @@ function App() {
     });
     setTitle('');
     setDescription('');
+    setTitleError('');
     fetchTasks();
+  };
+
+  const handleTitleChange = (value: string) => {
+    setTitle(value);
+    setTitleError(value.length > TITLE_MAX_LENGTH ? `Task name can be at most ${TITLE_MAX_LENGTH} characters.` : '');
+  };
+
+  const handleEditTitleChange = (value: string) => {
+    setEditTitle(value);
+    setEditTitleError(value.length > TITLE_MAX_LENGTH ? `Task name can be at most ${TITLE_MAX_LENGTH} characters.` : '');
   };
 
   const toggleComplete = async (task: Task) => {
@@ -54,12 +68,14 @@ function App() {
   };
 
   const saveEdit = async (task: Task) => {
+    if (!editTitle.trim() || editTitle.length > TITLE_MAX_LENGTH) return;
     await fetch(`${API}/api/tasks/${task.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...task, title: editTitle, description: editDesc }),
     });
     setEditingId(null);
+    setEditTitleError('');
     fetchTasks();
   };
 
@@ -71,7 +87,8 @@ function App() {
         <input
           placeholder="Task title"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={e => handleTitleChange(e.target.value)}
+          maxLength={TITLE_MAX_LENGTH}
           required
         />
         <input
@@ -79,7 +96,8 @@ function App() {
           value={description}
           onChange={e => setDescription(e.target.value)}
         />
-        <button type="submit">Add Task</button>
+        <button type="submit" disabled={!!titleError}>Add Task</button>
+        {titleError && <span className="error">{titleError}</span>}
       </form>
 
       <ul className="task-list">
@@ -87,10 +105,11 @@ function App() {
           <li key={task.id} className={task.isCompleted ? 'completed' : ''}>
             {editingId === task.id ? (
               <div className="edit-row">
-                <input value={editTitle} onChange={e => setEditTitle(e.target.value)} />
+                <input value={editTitle} onChange={e => handleEditTitleChange(e.target.value)} maxLength={TITLE_MAX_LENGTH} />
                 <input value={editDesc} onChange={e => setEditDesc(e.target.value)} />
-                <button onClick={() => saveEdit(task)}>Save</button>
+                <button onClick={() => saveEdit(task)} disabled={!!editTitleError}>Save</button>
                 <button onClick={() => setEditingId(null)}>Cancel</button>
+                {editTitleError && <span className="error">{editTitleError}</span>}
               </div>
             ) : (
               <div className="task-row">
@@ -104,7 +123,7 @@ function App() {
                   {task.description && <span>{task.description}</span>}
                 </div>
                 <div className="actions">
-                  <button onClick={() => { setEditingId(task.id!); setEditTitle(task.title); setEditDesc(task.description || ''); }}>Edit</button>
+                  <button onClick={() => { setEditingId(task.id!); setEditTitle(task.title); setEditDesc(task.description || ''); setEditTitleError(''); }}>Edit</button>
                   <button onClick={() => deleteTask(task.id!)}>Delete</button>
                 </div>
               </div>

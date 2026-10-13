@@ -24,12 +24,18 @@ tasks.MapGet("/{id}", async (string id, TaskService svc) =>
 
 tasks.MapPost("/", async (TaskItem task, TaskService svc) =>
 {
+    if (string.IsNullOrWhiteSpace(task.Title) || task.Title.Length > 100)
+        return Results.BadRequest("Title is required and must be at most 100 characters.");
+
     var created = await svc.CreateAsync(task);
     return Results.Created($"/api/tasks/{created.Id}", created);
 });
 
 tasks.MapPut("/{id}", async (string id, TaskItem updated, TaskService svc) =>
 {
+    if (string.IsNullOrWhiteSpace(updated.Title) || updated.Title.Length > 100)
+        return Results.BadRequest("Title is required and must be at most 100 characters.");
+
     if (await svc.GetByIdAsync(id) is null) return Results.NotFound();
     updated.Id = id;
     await svc.UpdateAsync(id, updated);

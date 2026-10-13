@@ -29,6 +29,17 @@
   cursor: pointer;
 }
 
+.form button:disabled {
+  background: #a0a0a0;
+  cursor: not-allowed;
+}
+
+.error {
+  width: 100%;
+  color: #d13438;
+  font-size: 0.85rem;
+}
+
 .task-list {
   list-style: none;
   padding: 0;
